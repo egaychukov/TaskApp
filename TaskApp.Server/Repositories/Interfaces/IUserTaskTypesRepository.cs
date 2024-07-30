@@ -1,6 +1,6 @@
 namespace TaskApp.Server.DataLayer;
 
-public interface IUserTaskTypeRepository
+public interface IUserTaskTypesRepository
 {
     Task<IEnumerable<UserTaskType>> GetTaskTypesAsync();
 }

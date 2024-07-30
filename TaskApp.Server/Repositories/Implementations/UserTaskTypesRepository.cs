@@ -3,11 +3,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace TaskApp.Server.DataLayer;
 
-class UserTaskTypeRepository : IUserTaskTypeRepository
+class UserTaskTypesRepository : IUserTaskTypesRepository
 {
     private readonly UserTasksDbContext userTasksContext;
 
-    public UserTaskTypeRepository(UserTasksDbContext userTasksContext)
+    public UserTaskTypesRepository(UserTasksDbContext userTasksContext)
         => this.userTasksContext = userTasksContext;
 
     public async Task<IEnumerable<UserTaskType>> GetTaskTypesAsync()
