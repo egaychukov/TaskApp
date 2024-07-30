@@ -1,4 +1,6 @@
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
+using TaskApp.Server.Controllers;
 using TaskApp.Server.DataLayer;
 using TaskApp.Server.Services;
 
@@ -16,6 +18,7 @@ builder.Services.AddTransient<IUserTasksRepository, UserTasksRepository>();
 builder.Services.AddTransient<IUserTaskTypesRepository, UserTaskTypesRepository>();
 builder.Services.AddTransient<IUserTasksService, UserTasksService>();
 builder.Services.AddTransient<IUserTaskTypesService, UserTaskTypesService>();
+builder.Services.AddTransient<IValidator<CreateUserTaskDto>, UserTaskValidator>();
 
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
