@@ -11,6 +11,9 @@ builder.Services.AddDbContext<UserTasksDbContext>(
     options => options.UseSqlServer(builder.Configuration.GetConnectionString("TasksDatabase"))
 );
 
+builder.Services.AddTransient<IUserTasksRepository, UserTasksRepository>();
+builder.Services.AddTransient<IUserTaskTypeRepository, UserTaskTypeRepository>();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
