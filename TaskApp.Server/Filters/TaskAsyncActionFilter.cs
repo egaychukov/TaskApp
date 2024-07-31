@@ -24,9 +24,11 @@ public class TaskAsyncActionFilter : ActionFilterAttribute
                 
                 if (!validationResult.IsValid)
                 {
-                    var errorMessages = validationResult.ToString()
-                        .Split('\n')
-                        .Select(message => message.Trim());
+                    var errorMessages = validationResult.Errors
+                        .Select(error => new {
+                            Parameter = error.PropertyName,
+                            Message = error.ErrorMessage,
+                        });
 
                     context.Result = new BadRequestObjectResult(new {
                         Errors = errorMessages,
