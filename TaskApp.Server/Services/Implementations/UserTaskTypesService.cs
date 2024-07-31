@@ -11,7 +11,7 @@ public class UserTaskTypesService : IUserTaskTypesService
         this.taskTypesRepository = taskTypesRepository;
     }
     
-    public async Task<IEnumerable<UserTaskType>> GetUserTaskTypesAsync()
+    public async Task<IEnumerable<UserTaskType>?> GetUserTaskTypesAsync()
     {
         return await taskTypesRepository.GetTaskTypesAsync();
     }

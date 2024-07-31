@@ -38,12 +38,20 @@ public class UserTasksController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetTaskByTitle([FromQuery] string title)
     {
-        return Ok(await tasksService.GetTaskByTitleAsync(title));
+        var foundTask = await tasksService.GetTaskByTitleAsync(title);
+        
+        return foundTask is not null 
+            ? Ok(foundTask)
+            : NotFound();
     }
 
     [HttpGet]
     public async Task<IActionResult> GetTasks([FromQuery] PaginationDto pagination)
     {
-        return Ok(await tasksService.GetTasks(pagination.PageNumber, pagination.PageSize));
+        var foundTasks = await tasksService.GetTasks(pagination.PageNumber, pagination.PageSize);
+
+        return foundTasks is not null 
+            ? Ok(foundTasks)
+            : NotFound();
     }
 }

@@ -22,12 +22,12 @@ class UserTasksService : IUserTasksService
         return userTask != null;
     }
 
-    public async Task<UserTask> GetTaskByTitleAsync(string title)
+    public async Task<UserTask?> GetTaskByTitleAsync(string title)
     {
         return await userTasksRepository.GetTaskByTitleAsync(title);
     }
 
-    public async Task<IEnumerable<UserTask>> GetTasks(int pageNumber, int pageSize)
+    public async Task<IEnumerable<UserTask>?> GetTasks(int pageNumber, int pageSize)
     {
         return await userTasksRepository.GetTasksAsync(pageNumber, pageSize);
     }

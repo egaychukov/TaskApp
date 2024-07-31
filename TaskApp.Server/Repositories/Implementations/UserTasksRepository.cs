@@ -16,13 +16,20 @@ public class UserTasksRepository : IUserTasksRepository
         return userTask;
     }
 
-    public async Task<UserTask> GetTaskByTitleAsync(string title)
-        => await userTasksContext.UserTasks
+    public async Task<UserTask?> GetTaskByTitleAsync(string title)
+    {
+        return await userTasksContext.UserTasks
             .SingleOrDefaultAsync(task => task.Title == title);
+    }
 
-    public async Task<IEnumerable<UserTask>> GetTasksAsync(int pageNumber, int pageSize)
-        => await userTasksContext.UserTasks
+    public async Task<IEnumerable<UserTask>?> GetTasksAsync(int pageNumber, int pageSize)
+    {
+        var foundTasks = userTasksContext.UserTasks
             .Skip((pageNumber - 1) * pageSize)
-            .Take(pageSize)
-            .ToListAsync();
+            .Take(pageSize);
+
+        return foundTasks.Count() != 0
+            ? await foundTasks.ToListAsync()
+            : null;
+    }
 }

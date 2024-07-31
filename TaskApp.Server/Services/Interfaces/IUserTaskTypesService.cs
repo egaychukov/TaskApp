@@ -4,5 +4,5 @@ namespace TaskApp.Server.Services;
 
 public interface IUserTaskTypesService
 {
-    Task<IEnumerable<UserTaskType>> GetUserTaskTypesAsync();
+    Task<IEnumerable<UserTaskType>?> GetUserTaskTypesAsync();
 }

@@ -10,6 +10,12 @@ class UserTaskTypesRepository : IUserTaskTypesRepository
     public UserTaskTypesRepository(UserTasksDbContext userTasksContext)
         => this.userTasksContext = userTasksContext;
 
-    public async Task<IEnumerable<UserTaskType>> GetTaskTypesAsync()
-        => await userTasksContext.UserTaskTypes.ToListAsync();
+    public async Task<IEnumerable<UserTaskType>?> GetTaskTypesAsync()
+    {
+        var foundTypes = userTasksContext.UserTaskTypes;
+
+        return foundTypes.Count() > 0
+            ? await foundTypes.ToListAsync()
+            : null;
+    }
 }
