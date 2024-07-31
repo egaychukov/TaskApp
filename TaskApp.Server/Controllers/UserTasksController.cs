@@ -20,13 +20,13 @@ public class UserTasksController : ControllerBase
     [ServiceFilter(typeof(TaskAsyncActionFilter))]
     public async Task<IActionResult> CreateTask([FromBody] CreateUserTaskDto createTaskDto)
     {
-        await tasksService.AddTaskAsync(new UserTask { 
+        var createdTask = await tasksService.AddTaskAsync(new UserTask { 
             Title = createTaskDto.Title,
             Description = createTaskDto.Description,
             UserTaskTypeId = createTaskDto.UserTaskTypeId,
         });
 
-        return Ok();
+        return Ok(createdTask);
     }
 
     [HttpGet]

@@ -9,10 +9,11 @@ public class UserTasksRepository : IUserTasksRepository
     public UserTasksRepository(UserTasksDbContext userTasksContext)
         => this.userTasksContext = userTasksContext;
 
-    public async Task AddTaskAsync(UserTask userTask)
+    public async Task<UserTask> AddTaskAsync(UserTask userTask)
     {
         await userTasksContext.AddAsync(userTask);
         await userTasksContext.SaveChangesAsync();
+        return userTask;
     }
 
     public async Task<UserTask> GetTaskByTitleAsync(string title)

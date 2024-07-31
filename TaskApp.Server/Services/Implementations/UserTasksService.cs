@@ -11,9 +11,9 @@ class UserTasksService : IUserTasksService
         this.userTasksRepository = userTasksRepository;
     }
 
-    public async Task AddTaskAsync(UserTask userTask)
+    public async Task<UserTask> AddTaskAsync(UserTask userTask)
     {
-        await userTasksRepository.AddTaskAsync(userTask);
+        return await userTasksRepository.AddTaskAsync(userTask);
     }
 
     public async Task<bool> TitleUsedAsync(string title)

@@ -32,9 +32,11 @@ public class TaskAsyncActionFilter : ActionFilterAttribute
                         Errors = errorMessages,
                     });
                 }
+                else
+                {
+                    await next();
+                }
             }
         }
-
-        await next();
     }
 }
