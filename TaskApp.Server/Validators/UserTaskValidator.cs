@@ -2,6 +2,8 @@ using FluentValidation;
 using TaskApp.Server.Controllers;
 using TaskApp.Server.Services;
 
+namespace TaskApp.Server.Validators;
+
 public class UserTaskValidator : AbstractValidator<CreateUserTaskDto>
 {
     public UserTaskValidator(IUserTasksService tasksService)

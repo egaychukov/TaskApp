@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using TaskApp.Server.Services;
 using TaskApp.Server.DataLayer;
-using FluentValidation;
+using TaskApp.Server.Filters;
 
 namespace TaskApp.Server.Controllers;
 
@@ -10,30 +10,20 @@ namespace TaskApp.Server.Controllers;
 public class UserTasksController : ControllerBase
 {
     private readonly IUserTasksService tasksService;
-    private readonly IValidator<CreateUserTaskDto> validator;
 
-    public UserTasksController(
-        IUserTasksService tasksService,
-        IValidator<CreateUserTaskDto> validator)
+    public UserTasksController(IUserTasksService tasksService)
     {
         this.tasksService = tasksService;
-        this.validator = validator;
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateTask([FromBody] CreateUserTaskDto taskDto)
+    [ServiceFilter(typeof(TaskAsyncActionFilter))]
+    public async Task<IActionResult> CreateTask([FromBody] CreateUserTaskDto createTaskDto)
     {
-        var result = await validator.ValidateAsync(taskDto);
-
-        if (!result.IsValid)
-        {
-            return BadRequest(result.ToString());
-        }
-
         await tasksService.AddTaskAsync(new UserTask { 
-            Title = taskDto.Title,
-            Description = taskDto.Description,
-            UserTaskTypeId = taskDto.UserTaskTypeId,
+            Title = createTaskDto.Title,
+            Description = createTaskDto.Description,
+            UserTaskTypeId = createTaskDto.UserTaskTypeId,
         });
 
         return Ok();
@@ -51,11 +41,9 @@ public class UserTasksController : ControllerBase
         return Ok(await tasksService.GetTaskByTitleAsync(title));
     }
 
-    [HttpGet()]
-    public async Task<IActionResult> GetTasks(
-        [FromQuery] int pageNumber, 
-        [FromQuery] int pageSize)
+    [HttpGet]
+    public async Task<IActionResult> GetTasks([FromQuery] PaginationDto pagination)
     {
-        return Ok(await tasksService.GetTasks(pageNumber, pageSize));
+        return Ok(await tasksService.GetTasks(pagination.PageNumber, pagination.PageSize));
     }
 }
