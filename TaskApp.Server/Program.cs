@@ -1,5 +1,6 @@
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TaskApp.Server.Controllers;
 using TaskApp.Server.DataLayer;
@@ -10,6 +11,10 @@ using TaskApp.Server.Validators;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+builder.Services.Configure<ApiBehaviorOptions>(options => {
+    options.SuppressModelStateInvalidFilter = true;
+});
 
 builder.Services.AddControllers();
 
