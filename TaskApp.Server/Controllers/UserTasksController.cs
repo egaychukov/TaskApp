@@ -36,23 +36,17 @@ public class UserTasksController : ControllerBase
     }
 
     [HttpGet]
+    [NotFoundActionFilter]
     public async Task<IActionResult> GetTaskByTitle([FromQuery] string title)
     {
-        var foundTask = await tasksService.GetTaskByTitleAsync(title);
-        
-        return foundTask is not null 
-            ? Ok(foundTask)
-            : NotFound();
+        return Ok(await tasksService.GetTaskByTitleAsync(title));
     }
 
     [HttpGet]
     [ServiceFilter(typeof(PaginationValidationFilter))]
+    [NotFoundActionFilter]
     public async Task<IActionResult> GetTasks([FromQuery] PaginationDto pagination)
     {
-        var foundTasks = await tasksService.GetTasks(pagination.PageNumber, pagination.PageSize);
-
-        return foundTasks is not null 
-            ? Ok(foundTasks)
-            : NotFound();
+        return Ok(await tasksService.GetTasks(pagination.PageNumber, pagination.PageSize));
     }
 }

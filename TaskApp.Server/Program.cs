@@ -1,5 +1,4 @@
 using FluentValidation;
-using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TaskApp.Server.Controllers;
@@ -22,14 +21,23 @@ builder.Services.AddDbContext<UserTasksDbContext>(
     options => options.UseSqlServer(builder.Configuration.GetConnectionString("TasksDatabase"))
 );
 
+// Repositories
 builder.Services.AddTransient<IUserTasksRepository, UserTasksRepository>();
 builder.Services.AddTransient<IUserTaskTypesRepository, UserTaskTypesRepository>();
+
+// Services
 builder.Services.AddTransient<IUserTasksService, UserTasksService>();
 builder.Services.AddTransient<IUserTaskTypesService, UserTaskTypesService>();
+
+// Validators
 builder.Services.AddScoped<IValidator<CreateUserTaskDto>, UserTaskValidator>();
 builder.Services.AddScoped<IValidator<PaginationDto>, PaginationValidator>();
+
+// Filters
 builder.Services.AddScoped<TaskAsyncActionFilter>();
 builder.Services.AddScoped<PaginationValidationFilter>();
+builder.Services.AddScoped<NotFoundActionFilter>();
+
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
