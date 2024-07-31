@@ -46,6 +46,7 @@ public class UserTasksController : ControllerBase
     }
 
     [HttpGet]
+    [ServiceFilter(typeof(PaginationValidationFilter))]
     public async Task<IActionResult> GetTasks([FromQuery] PaginationDto pagination)
     {
         var foundTasks = await tasksService.GetTasks(pagination.PageNumber, pagination.PageSize);

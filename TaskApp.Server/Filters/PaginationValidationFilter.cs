@@ -6,11 +6,11 @@ using TaskApp.Server.Validators;
 
 namespace TaskApp.Server.Filters;
 
-public class TaskAsyncActionFilter : ActionFilterAttribute
+class PaginationValidationFilter : ActionFilterAttribute
 {
-    private readonly IValidator<CreateUserTaskDto> validator;
-
-    public TaskAsyncActionFilter(IValidator<CreateUserTaskDto> validator)
+    private readonly IValidator<PaginationDto> validator;
+    
+    public PaginationValidationFilter(IValidator<PaginationDto> validator)
     {
         this.validator = validator;
     }
@@ -19,9 +19,9 @@ public class TaskAsyncActionFilter : ActionFilterAttribute
     {
         foreach (var argument in context.ActionArguments.Values)
         {
-            if (argument is CreateUserTaskDto createTaskDto && createTaskDto is not null)
+            if (argument is PaginationDto pagination && pagination is not null)
             {
-                var validationResult = await validator.ValidateAsync(createTaskDto);
+                var validationResult = await validator.ValidateAsync(pagination);
                 
                 if (!validationResult.IsValid)
                 {

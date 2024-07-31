@@ -27,8 +27,9 @@ builder.Services.AddTransient<IUserTaskTypesRepository, UserTaskTypesRepository>
 builder.Services.AddTransient<IUserTasksService, UserTasksService>();
 builder.Services.AddTransient<IUserTaskTypesService, UserTaskTypesService>();
 builder.Services.AddScoped<IValidator<CreateUserTaskDto>, UserTaskValidator>();
+builder.Services.AddScoped<IValidator<PaginationDto>, PaginationValidator>();
 builder.Services.AddScoped<TaskAsyncActionFilter>();
-
+builder.Services.AddScoped<PaginationValidationFilter>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
