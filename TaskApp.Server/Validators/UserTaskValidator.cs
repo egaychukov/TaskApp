@@ -15,10 +15,7 @@ public class UserTaskValidator : AbstractValidator<CreateUserTaskDto>
         RuleFor(task => task.Title)
             .NotNull()
             .NotEmpty()
-            .MustAsync(async (title, t) => !(await tasksService.TitleUsedAsync(title)))
-            .WithMessage("The title specified is already present in the database");
-
-        RuleFor(task => task.UserTaskTypeId)
-            .NotNull();
+            .MustAsync(async (title, token) => !(await tasksService.TitleUsedAsync(title)))
+                .WithMessage("The title specified is already present in the database");
     }
 }

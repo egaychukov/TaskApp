@@ -11,10 +11,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.Configure<ApiBehaviorOptions>(options => {
-    options.SuppressModelStateInvalidFilter = true;
-});
-
 builder.Services.AddControllers();
 
 builder.Services.AddDbContext<UserTasksDbContext>(
