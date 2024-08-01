@@ -1,3 +1,4 @@
+using AutoMapper;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -16,6 +17,9 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<UserTasksDbContext>(
     options => options.UseSqlServer(builder.Configuration.GetConnectionString("TasksDatabase"))
 );
+
+// AutoMapper
+builder.Services.AddAutoMapper(options => options.AddProfile<MappingProfile>());
 
 // Repositories
 builder.Services.AddTransient<IUserTasksRepository, UserTasksRepository>();

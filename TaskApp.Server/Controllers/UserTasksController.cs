@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using TaskApp.Server.Services;
 using TaskApp.Server.DataLayer;
 using TaskApp.Server.Filters;
+using AutoMapper;
 
 namespace TaskApp.Server.Controllers;
 
@@ -10,23 +11,19 @@ namespace TaskApp.Server.Controllers;
 public class UserTasksController : ControllerBase
 {
     private readonly IUserTasksService tasksService;
+    private readonly IMapper mapper;
 
-    public UserTasksController(IUserTasksService tasksService)
+    public UserTasksController(IUserTasksService tasksService, IMapper mapper)
     {
         this.tasksService = tasksService;
+        this.mapper = mapper;
     }
 
     [HttpPost]
     [ServiceFilter(typeof(TaskAsyncActionFilter))]
     public async Task<IActionResult> CreateTask([FromBody] CreateUserTaskDto createTaskDto)
     {
-        var createdTask = await tasksService.AddTaskAsync(new UserTask { 
-            Title = createTaskDto.Title,
-            Description = createTaskDto.Description,
-            UserTaskTypeId = createTaskDto.UserTaskTypeId,
-        });
-
-        return Ok(createdTask);
+        return Ok(await tasksService.AddTaskAsync(mapper.Map<UserTask>(createTaskDto)));
     }
 
     [HttpGet]
