@@ -30,4 +30,12 @@ public class UserTasksRepository : IUserTasksRepository
             ? await foundTasks.ToListAsync()
             : null;
     }
+
+    public async Task<bool> TaskTitleExistsAsync(string title)
+    {
+        var taskCount = await userTasksContext.UserTasks
+            .CountAsync(u => u.Title == title);
+
+        return taskCount > 0;
+    }
 }

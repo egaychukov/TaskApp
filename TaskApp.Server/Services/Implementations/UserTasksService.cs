@@ -16,10 +16,9 @@ class UserTasksService : IUserTasksService
         return await userTasksRepository.AddTaskAsync(userTask);
     }
 
-    public async Task<bool> TitleUsedAsync(string title)
+    public async Task<bool> TaskTitleExistsAsync(string title)
     {
-        var userTask = await userTasksRepository.GetTaskByTitleAsync(title);
-        return userTask != null;
+        return await userTasksRepository.TaskTitleExistsAsync(title);
     }
 
     public async Task<UserTask?> GetTaskByTitleAsync(string title)

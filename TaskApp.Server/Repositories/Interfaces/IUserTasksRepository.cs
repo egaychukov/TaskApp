@@ -5,4 +5,5 @@ public interface IUserTasksRepository
     Task<UserTask> AddTaskAsync(UserTask userTask);
     Task<IEnumerable<UserTask>?> GetTasksAsync();
     Task<UserTask?> GetTaskByTitleAsync(string title);
+    Task<bool> TaskTitleExistsAsync(string title);
 }

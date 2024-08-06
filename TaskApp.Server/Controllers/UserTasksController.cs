@@ -29,7 +29,7 @@ public class UserTasksController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> CheckTitle([FromQuery] string title)
     {
-        return Ok(await tasksService.TitleUsedAsync(title));
+        return Ok(await tasksService.TaskTitleExistsAsync(title));
     }
 
     [HttpGet]
