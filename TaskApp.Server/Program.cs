@@ -18,6 +18,14 @@ builder.Services.AddDbContext<UserTasksDbContext>(
     options => options.UseSqlServer(builder.Configuration.GetConnectionString("TasksDatabase"))
 );
 
+builder.Services.AddCors(options => 
+{
+    options.AddPolicy("CustomPolicy", 
+        builder => builder.AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .AllowAnyOrigin());
+});
+
 // AutoMapper
 builder.Services.AddAutoMapper(options => options.AddProfile<MappingProfile>());
 
@@ -51,6 +59,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors("CustomPolicy");
 
 app.UseAuthorization();
 
