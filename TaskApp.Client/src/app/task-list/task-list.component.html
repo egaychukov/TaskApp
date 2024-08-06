@@ -1,4 +1,4 @@
-<mat-toolbar>
+<mat-toolbar class="toolbar">
     <span>Task Manager</span>
 </mat-toolbar>
 
@@ -7,7 +7,7 @@
     <mat-icon matSuffix>search</mat-icon>
 </mat-form-field>
 
-<mat-accordion>
+<mat-accordion *ngIf="!isLoading; else loadingSpinner">
     <mat-expansion-panel *ngFor="let userTask of userTasks">
         <mat-expansion-panel-header>
             <mat-panel-title>{{ userTask.title }}</mat-panel-title>
@@ -17,3 +17,9 @@
         <p>{{ userTask.description }}</p>
     </mat-expansion-panel>
 </mat-accordion>
+
+<ng-template #loadingSpinner>
+    <div class="spinner-container">
+        <mat-spinner [diameter]="spinnerDiameter"></mat-spinner>
+    </div>    
+</ng-template>
