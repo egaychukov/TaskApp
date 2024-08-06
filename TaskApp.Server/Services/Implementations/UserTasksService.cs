@@ -27,8 +27,8 @@ class UserTasksService : IUserTasksService
         return await userTasksRepository.GetTaskByTitleAsync(title);
     }
 
-    public async Task<IEnumerable<UserTask>?> GetTasks(int pageNumber, int pageSize)
+    public async Task<IEnumerable<UserTask>?> GetTasks()
     {
-        return await userTasksRepository.GetTasksAsync(pageNumber, pageSize);
+        return await userTasksRepository.GetTasksAsync();
     }
 }

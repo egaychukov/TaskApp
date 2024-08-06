@@ -40,10 +40,9 @@ public class UserTasksController : ControllerBase
     }
 
     [HttpGet]
-    [ServiceFilter(typeof(PaginationValidationFilter))]
     [NotFoundActionFilter]
-    public async Task<IActionResult> GetTasks([FromQuery] PaginationDto pagination)
+    public async Task<IActionResult> GetTasks()
     {
-        return Ok(await tasksService.GetTasks(pagination.PageNumber, pagination.PageSize));
+        return Ok(await tasksService.GetTasks());
     }
 }

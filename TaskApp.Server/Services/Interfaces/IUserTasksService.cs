@@ -7,5 +7,5 @@ public interface IUserTasksService
     Task<UserTask> AddTaskAsync(UserTask userTask);
     Task<bool> TitleUsedAsync(string title);
     Task<UserTask?> GetTaskByTitleAsync(string title);
-    Task<IEnumerable<UserTask>?> GetTasks(int pageNumber, int pageSize);
+    Task<IEnumerable<UserTask>?> GetTasks();
 }

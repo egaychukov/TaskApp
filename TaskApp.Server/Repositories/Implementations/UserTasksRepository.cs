@@ -22,12 +22,10 @@ public class UserTasksRepository : IUserTasksRepository
             .SingleOrDefaultAsync(task => task.Title == title);
     }
 
-    public async Task<IEnumerable<UserTask>?> GetTasksAsync(int pageNumber, int pageSize)
+    public async Task<IEnumerable<UserTask>?> GetTasksAsync()
     {
-        var foundTasks = userTasksContext.UserTasks
-            .Skip((pageNumber - 1) * pageSize)
-            .Take(pageSize);
-
+        var foundTasks = userTasksContext.UserTasks;
+        
         return foundTasks.Count() != 0
             ? await foundTasks.ToListAsync()
             : null;

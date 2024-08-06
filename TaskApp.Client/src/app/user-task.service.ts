@@ -12,14 +12,9 @@ export class UserTaskService {
     private client: HttpClient,
   ) { }
 
-  public getUserTasks(pageSize: number, pageNumber: number): Observable<UserTask[]> {
-    const params = new HttpParams()
-      .set('pageSize', pageSize)
-      .set('pageNumber', pageNumber);
-
+  public getUserTasks(): Observable<UserTask[]> {
     return this.client.get<UserTask[]>(
       `${environment.userTasksApiUrl}/${environment.endpoints.GetTasks}`,
-      { params },
     );
   }
 

@@ -14,7 +14,7 @@ export class TaskListComponent implements OnInit {
   constructor(private userTaskService: UserTaskService) { }
 
   ngOnInit(): void {
-    this.userTaskService.getUserTasks(3, 1)
+    this.userTaskService.getUserTasks()
       .pipe(take(1))
       .subscribe(userTasks => {
         console.log(userTasks);
