@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { UserTask, UserTaskService } from '../user-task.service';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-task-list',
@@ -7,9 +9,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class TaskListComponent implements OnInit {
 
-  constructor() { }
+  public userTasks: UserTask[] | undefined;
+
+  constructor(private userTaskService: UserTaskService) { }
 
   ngOnInit(): void {
+    this.userTaskService.getUserTasks(3, 1)
+      .pipe(take(1))
+      .subscribe(userTasks => {
+        console.log(userTasks);
+        this.userTasks = userTasks;
+      });
   }
-
 }

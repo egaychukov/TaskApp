@@ -1,1 +1,19 @@
-<p>task-list works!</p>
+<mat-toolbar>
+    <span>Task Manager</span>
+</mat-toolbar>
+
+<mat-form-field appearance="outline" id="userTaskSearch" class="full-width">
+    <input matInput type="search" name="userTask" id="userTask">
+    <mat-icon matSuffix>search</mat-icon>
+</mat-form-field>
+
+<mat-accordion>
+    <mat-expansion-panel *ngFor="let userTask of userTasks">
+        <mat-expansion-panel-header>
+            <mat-panel-title>{{ userTask.title }}</mat-panel-title>
+            <mat-panel-description> {{ userTask.userTaskTypeId }} </mat-panel-description>
+        </mat-expansion-panel-header>
+        <mat-divider></mat-divider>
+        <p>{{ userTask.description }}</p>
+    </mat-expansion-panel>
+</mat-accordion>

@@ -3,7 +3,9 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  userTasksApiUrl: '',
+  endpoints: { GetTasks: 'GetTasks', GetTaskByTitle: 'GetTaskByTitle', CreateTask: 'CreateTask', CheckTitle: 'CheckTitle' },
 };
 
 /*
