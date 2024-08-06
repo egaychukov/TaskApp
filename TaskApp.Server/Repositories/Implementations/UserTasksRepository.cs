@@ -16,17 +16,21 @@ public class UserTasksRepository : IUserTasksRepository
         return userTask;
     }
 
-    public async Task<UserTask?> GetTaskByTitleAsync(string title)
+    public async Task<IEnumerable<UserTask>?> GetTasksByTitleAsync(string title)
     {
-        return await userTasksContext.UserTasks
-            .SingleOrDefaultAsync(task => task.Title == title);
+        var foundTasks = userTasksContext.UserTasks
+            .Where(task => task.Title.Contains(title));
+
+        return foundTasks.Count() > 0
+            ? await foundTasks.ToListAsync()
+            : null;
     }
 
     public async Task<IEnumerable<UserTask>?> GetTasksAsync()
     {
         var foundTasks = userTasksContext.UserTasks;
         
-        return foundTasks.Count() != 0
+        return foundTasks.Count() > 0
             ? await foundTasks.ToListAsync()
             : null;
     }

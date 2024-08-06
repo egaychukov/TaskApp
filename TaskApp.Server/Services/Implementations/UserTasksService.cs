@@ -21,9 +21,9 @@ class UserTasksService : IUserTasksService
         return await userTasksRepository.TaskTitleExistsAsync(title);
     }
 
-    public async Task<UserTask?> GetTaskByTitleAsync(string title)
+    public async Task<IEnumerable<UserTask>?> GetTasksByTitleAsync(string title)
     {
-        return await userTasksRepository.GetTaskByTitleAsync(title);
+        return await userTasksRepository.GetTasksByTitleAsync(title);
     }
 
     public async Task<IEnumerable<UserTask>?> GetTasks()
