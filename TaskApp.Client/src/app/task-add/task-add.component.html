@@ -1,1 +1,33 @@
-<p>task-add works!</p>
+<form>
+    <mat-form-field class="full-width" appearance="outline">
+        <mat-label>Title</mat-label>
+        <input matInput type="text" name="title" id="title">
+    </mat-form-field>
+
+    <br>
+
+    <mat-form-field class="full-width" appearance="outline">
+        <mat-label>Type</mat-label>
+        <mat-select name="type" id="type">
+            <mat-option [value]="'Type1'">Type #1</mat-option>
+            <mat-option [value]="'Type2'">Type #2</mat-option>
+            <mat-option [value]="'Type3'">Type #3</mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <br>
+
+    <mat-form-field class="full-width" appearance="outline">
+        <mat-label>Description</mat-label>
+        <textarea matInput 
+            name="description" 
+            id="description"
+            rows="6"></textarea>
+    </mat-form-field>
+
+    <br>
+
+    <button mat-flat-button
+        color="primary"
+        class="full-width">Send</button>
+</form>
