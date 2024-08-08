@@ -24,7 +24,8 @@ export class UserTaskService {
 }
 
 export interface UserTask {
+  userTaskId: number,
   title: string,
   description: string,
-  userTaskTypeId: number,
+  taskType: number,
 }

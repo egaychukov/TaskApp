@@ -33,16 +33,13 @@ public class UserTasksController : ControllerBase
     }
 
     [HttpGet]
-    [NotFoundActionFilter]
     public async Task<IActionResult> GetTasksByTitle([FromQuery] string? title)
     {
-        return Ok(await tasksService.GetTasksByTitleAsync(title));
-    }
+        var foundTasks = await tasksService.GetTasksByTitleAsync(title);
 
-    [HttpGet]
-    [NotFoundActionFilter]
-    public async Task<IActionResult> GetTasks()
-    {
-        return Ok(await tasksService.GetTasks());
+        if (foundTasks is null)
+            return NotFound();
+
+        return Ok(mapper.Map<List<ResponseUserTaskDto>>(foundTasks));
     }
 }

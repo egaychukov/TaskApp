@@ -25,7 +25,7 @@
     <mat-expansion-panel *ngFor="let userTask of userTasks">
         <mat-expansion-panel-header>
             <mat-panel-title>{{ userTask.title }}</mat-panel-title>
-            <mat-panel-description> {{ userTask.userTaskTypeId }} </mat-panel-description>
+            <mat-panel-description> {{ userTask.taskType }} </mat-panel-description>
         </mat-expansion-panel-header>
         <mat-divider></mat-divider>
         <p>{{ userTask.description }}</p>

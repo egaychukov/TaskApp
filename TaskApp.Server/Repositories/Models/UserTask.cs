@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace TaskApp.Server.DataLayer;
 
 public class UserTask

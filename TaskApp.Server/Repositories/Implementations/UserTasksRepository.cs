@@ -22,7 +22,8 @@ public class UserTasksRepository : IUserTasksRepository
             title = string.Empty;
 
         var foundTasks = userTasksContext.UserTasks
-            .Where(task => task.Title.Contains(title));
+            .Where(task => task.Title.Contains(title))
+            .Include(task => task.UserTaskType);
 
         return foundTasks.Count() > 0
             ? await foundTasks.ToListAsync()
@@ -31,7 +32,8 @@ public class UserTasksRepository : IUserTasksRepository
 
     public async Task<IEnumerable<UserTask>?> GetTasksAsync()
     {
-        var foundTasks = userTasksContext.UserTasks;
+        var foundTasks = userTasksContext.UserTasks
+            .Include(task => task.UserTaskType);
         
         return foundTasks.Count() > 0
             ? await foundTasks.ToListAsync()
