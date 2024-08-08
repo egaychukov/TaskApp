@@ -18,6 +18,9 @@ public class UserTasksRepository : IUserTasksRepository
 
     public async Task<IEnumerable<UserTask>?> GetTasksByTitleAsync(string title)
     {
+        if (string.IsNullOrEmpty(title))
+            title = string.Empty;
+
         var foundTasks = userTasksContext.UserTasks
             .Where(task => task.Title.Contains(title));
 

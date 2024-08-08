@@ -1,6 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { UserTask, UserTaskService } from '../user-task.service';
-import { interval, startWith, Subscription, switchMap } from 'rxjs';
+import { delay, interval, Observable, startWith, Subscription, catchError, EMPTY, concatMap, range, switchMap } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-task-list',
@@ -8,30 +10,69 @@ import { interval, startWith, Subscription, switchMap } from 'rxjs';
   styleUrls: ['./task-list.component.css']
 })
 export class TaskListComponent implements OnInit, OnDestroy {
-
-  private userTasksSubscription: Subscription | undefined;
   
+  private taskRefreshSub: Subscription | undefined;
+
+  public userTasks: UserTask[] = [];
   public isLoading: boolean = true;
-  public userTasks: UserTask[] | undefined;
+  public loadFailed: boolean = false;
   public spinnerDiameter: number = 50;
-  public taskListRefreshFreq: number = 30000;
+  public responseDelay: number = 500;
+  public taskRefreshFreq: number = 30000;
+  public errorMessage: string = '';
+  public searchQuery: string = '';
 
   constructor(private userTaskService: UserTaskService) { }
 
   ngOnInit(): void {
-    this.userTasksSubscription = interval(this.taskListRefreshFreq)
-      .pipe(startWith(() => this.userTaskService.getUserTasks()))
+    this.taskRefreshSub = this.searchTasks(
+        interval(this.taskRefreshFreq)
+          .pipe(startWith(this.searchTasks(range(1, 1))))
+      )
+      .subscribe((tasks) => this.handleResponse(tasks));
+  }
+
+  public search() {
+    this.searchTasks(range(1, 1))
+      .subscribe((tasks) => this.handleResponse(tasks));
+  }
+
+  private searchTasks(outerObservable: Observable<any>) {
+    return outerObservable
       .pipe(switchMap(() => {
         this.isLoading = true;
-        return this.userTaskService.getUserTasks()
+        this.loadFailed = false;
+        return this.userTaskService.getTasksByTitle(this.searchQuery)
+          .pipe(catchError(error => {
+            this.handleError(error);
+            console.log(this.isLoading);
+            console.log(this.loadFailed);
+            return EMPTY;
+          }))
       }))
-      .subscribe(userTasks => {
-        this.isLoading = false;
-        this.userTasks = userTasks;
-      });
+      .pipe(delay(this.responseDelay));
+  }
+
+  private handleError(error: Error) {
+    this.userTasks = [];
+    this.isLoading = false;
+    this.loadFailed = true;
+
+    if (error instanceof HttpErrorResponse) {
+      const message = environment.errorMessages[error.status];
+      this.errorMessage = message ?? environment.defaultErrorMessage;
+    }
+    else {
+      throw error;
+    }
+  }
+
+  private handleResponse(userTasks: UserTask[]) {
+    this.userTasks = userTasks;
+    this.isLoading = false;
   }
 
   ngOnDestroy(): void {
-    this.userTasksSubscription?.unsubscribe();
+    this.taskRefreshSub?.unsubscribe();
   }
 }

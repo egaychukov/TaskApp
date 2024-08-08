@@ -5,7 +5,13 @@
 export const environment = {
   production: false,
   userTasksApiUrl: '',
-  endpoints: { GetTasks: 'GetTasks', GetTaskByTitle: 'GetTaskByTitle', CreateTask: 'CreateTask', CheckTitle: 'CheckTitle' },
+  endpoints: { GetTasks: 'GetTasks', GetTaskByTitle: 'GetTasksByTitle', CreateTask: 'CreateTask', CheckTitle: 'CheckTitle' },
+  errorMessages: {
+    0: 'Network or client side error',
+    404: 'The item was not found',
+    500: 'Internal server error. Please try again later',
+  } as { [key: number]: string },
+  defaultErrorMessage: 'An unexpected error occurred'
 };
 
 /*

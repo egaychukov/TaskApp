@@ -12,17 +12,11 @@ export class UserTaskService {
     private client: HttpClient,
   ) { }
 
-  public getUserTasks(): Observable<UserTask[]> {
-    return this.client.get<UserTask[]>(
-      `${environment.userTasksApiUrl}/${environment.endpoints.GetTasks}`,
-    );
-  }
-
-  public getTaskByTitle(title: string): Observable<UserTask> {
+  public getTasksByTitle(title: string): Observable<UserTask[]> {
     const params = new HttpParams()
       .set('title', title);
 
-      return this.client.get<UserTask>(
+      return this.client.get<UserTask[]>(
         `${environment.userTasksApiUrl}/${environment.endpoints.GetTaskByTitle}`,
         { params },
       );

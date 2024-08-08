@@ -3,11 +3,25 @@
 </mat-toolbar>
 
 <mat-form-field appearance="outline" id="userTaskSearch" class="full-width">
-    <input matInput type="search" name="userTask" id="userTask">
-    <mat-icon matSuffix>search</mat-icon>
+    <input matInput
+        type="search" 
+        name="userTask" 
+        id="userTask"
+        [(ngModel)]="searchQuery">
+    <mat-icon matSuffix (click)="search()">search</mat-icon>
 </mat-form-field>
 
-<mat-accordion *ngIf="!isLoading; else loadingSpinner">
+<ng-template [ngIf]="loadFailed">
+    <mat-card> {{errorMessage}} </mat-card>
+</ng-template>
+
+<ng-template #spinner>
+    <div class="spinner-container">
+        <mat-spinner [diameter]="spinnerDiameter"></mat-spinner>
+    </div>    
+</ng-template>
+
+<mat-accordion *ngIf="!isLoading; else spinner">
     <mat-expansion-panel *ngFor="let userTask of userTasks">
         <mat-expansion-panel-header>
             <mat-panel-title>{{ userTask.title }}</mat-panel-title>
@@ -17,9 +31,3 @@
         <p>{{ userTask.description }}</p>
     </mat-expansion-panel>
 </mat-accordion>
-
-<ng-template #loadingSpinner>
-    <div class="spinner-container">
-        <mat-spinner [diameter]="spinnerDiameter"></mat-spinner>
-    </div>    
-</ng-template>

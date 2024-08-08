@@ -34,7 +34,7 @@ public class UserTasksController : ControllerBase
 
     [HttpGet]
     [NotFoundActionFilter]
-    public async Task<IActionResult> GetTaskByTitle([FromQuery] string title)
+    public async Task<IActionResult> GetTasksByTitle([FromQuery] string? title)
     {
         return Ok(await tasksService.GetTasksByTitleAsync(title));
     }
