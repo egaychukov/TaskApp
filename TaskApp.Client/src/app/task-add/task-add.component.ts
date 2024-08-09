@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { TaskTypeService, TaskType } from '../task-type.service';
 import { FormBuilder } from '@angular/forms';
+import { UserTaskService } from '../user-task.service';
 
 @Component({
   selector: 'app-task-add',
@@ -13,12 +14,13 @@ export class TaskAddComponent implements OnInit {
   public descAreaRowsNumber: number = 6;
   public taskCreationForm = this.formBuilder.group({
     title: [''],
-    type: [''],
+    userTaskTypeId: [''],
     description: [''],
   });
 
   constructor(
     private taskTypeService: TaskTypeService,
+    private taskService: UserTaskService,
     private formBuilder: FormBuilder,
   ) { }
 
@@ -27,7 +29,11 @@ export class TaskAddComponent implements OnInit {
       .subscribe(types => this.taskTypes = types);
   }
 
-  public logStatus() {
-    console.log(this.taskCreationForm.value);
+  public createTask() {
+    this.taskService.createTask(this.taskCreationForm.value)
+      .subscribe({
+        next: task => console.log(task),
+        error: err => console.log(err),
+      });
   }
 }

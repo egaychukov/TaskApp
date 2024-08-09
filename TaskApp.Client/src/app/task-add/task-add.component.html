@@ -1,4 +1,4 @@
-<form [formGroup]="taskCreationForm">
+<form [formGroup]="taskCreationForm" (ngSubmit)="createTask()">
     
     <mat-form-field class="full-width" appearance="outline">
         <mat-label>Title</mat-label>
@@ -9,10 +9,10 @@
 
     <mat-form-field class="full-width" appearance="outline">
         <mat-label>Type</mat-label>
-        <mat-select name="type" id="type" formControlName="type">
-            <mat-option *ngFor="let type of taskTypes" 
-                [value]="type.userTaskTypeId">
-                {{ type.title }}
+        <mat-select name="userTaskTypeId" id="userTaskTypeId" formControlName="userTaskTypeId">
+            <mat-option *ngFor="let taskType of taskTypes" 
+                [value]="taskType.userTaskTypeId">
+                {{ taskType.title }}
             </mat-option>
         </mat-select>
     </mat-form-field>

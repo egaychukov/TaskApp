@@ -12,20 +12,32 @@ export class UserTaskService {
     private client: HttpClient,
   ) { }
 
-  public getTasksByTitle(title: string): Observable<UserTask[]> {
+  public getTasksByTitle(title: string): Observable<TaskResponse[]> {
     const params = new HttpParams()
       .set('title', title);
 
-      return this.client.get<UserTask[]>(
+      return this.client.get<TaskResponse[]>(
         environment.userTasksApiUrl + environment.endpoints.GetTaskByTitle,
         { params },
       );
   }
+
+  public createTask(userTask: TaskRequest): Observable<TaskRequest> {
+    console.log(userTask);
+    return this.client.post<TaskRequest>(
+      environment.userTasksApiUrl + environment.endpoints.CreateTask, 
+      userTask);
+  }
 }
 
-export interface UserTask {
-  userTaskId: number,
+export interface TaskRequest {
   title: string,
   description: string,
-  taskType: number,
+  userTaskTypeId: number,
+}
+
+export interface TaskResponse {
+  title: string,
+  description: string,
+  taskType: string,
 }

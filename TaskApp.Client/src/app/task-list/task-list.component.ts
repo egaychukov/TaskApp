@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { UserTask, UserTaskService } from '../user-task.service';
+import { TaskResponse, UserTaskService } from '../user-task.service';
 import { delay, interval, Observable, startWith, Subscription, catchError, EMPTY, concatMap, range, switchMap } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
@@ -13,7 +13,7 @@ export class TaskListComponent implements OnInit, OnDestroy {
   
   private taskRefreshSub: Subscription | undefined;
 
-  public userTasks: UserTask[] = [];
+  public userTasks: TaskResponse[] = [];
   public isLoading: boolean = true;
   public loadFailed: boolean = false;
   public spinnerDiameter: number = 50;
@@ -45,8 +45,6 @@ export class TaskListComponent implements OnInit, OnDestroy {
         return this.userTaskService.getTasksByTitle(this.searchQuery)
           .pipe(catchError(error => {
             this.handleError(error);
-            console.log(this.isLoading);
-            console.log(this.loadFailed);
             return EMPTY;
           }))
       }))
@@ -67,7 +65,7 @@ export class TaskListComponent implements OnInit, OnDestroy {
     }
   }
 
-  private handleResponse(userTasks: UserTask[]) {
+  private handleResponse(userTasks: TaskResponse[]) {
     this.userTasks = userTasks;
     this.isLoading = false;
   }
