@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { TaskTypeService, TaskType } from '../task-type.service';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { UserTaskService } from '../user-task.service';
+import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-task-add',
@@ -12,7 +13,11 @@ export class TaskAddComponent implements OnInit {
 
   public taskTypes: TaskType[] = [];
   public descAreaRowsNumber: number = 6;
-  public taskCreationForm = this.formBuilder.group({
+  private toastDuration: number = 3500;
+  private failToastMessage: string = 'Task failed to create';
+  private successToastMessage: string = 'Task created successfully';
+  private actionToastText:string = 'Ok';
+  public taskCreationForm: FormGroup = this.formBuilder.group({
     title: [''],
     userTaskTypeId: [''],
     description: [''],
@@ -22,6 +27,7 @@ export class TaskAddComponent implements OnInit {
     private taskTypeService: TaskTypeService,
     private taskService: UserTaskService,
     private formBuilder: FormBuilder,
+    private snackbar: MatSnackBar,
   ) { }
 
   ngOnInit(): void {
@@ -32,8 +38,17 @@ export class TaskAddComponent implements OnInit {
   public createTask() {
     this.taskService.createTask(this.taskCreationForm.value)
       .subscribe({
-        next: task => console.log(task),
-        error: err => console.log(err),
+        next: () => this.showSnackbar(true),
+        error: () => this.showSnackbar(false),
       });
+  }
+
+  private showSnackbar(success: boolean) {
+    const message = success ? this.successToastMessage : this.failToastMessage;
+    return this.snackbar.open(
+      message, 
+      this.actionToastText, 
+      { duration: this.toastDuration },
+    );
   }
 }
