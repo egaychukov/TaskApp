@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { TaskTypeService, TaskType } from '../task-type.service';
 
 @Component({
   selector: 'app-task-add',
@@ -7,9 +8,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class TaskAddComponent implements OnInit {
 
-  constructor() { }
+  public taskTypes: TaskType[] = [];
+
+  constructor(private taskTypeService: TaskTypeService) { }
 
   ngOnInit(): void {
+    this.taskTypeService.getTaskTypes()
+      .subscribe(types => this.taskTypes = types);
   }
-
 }
