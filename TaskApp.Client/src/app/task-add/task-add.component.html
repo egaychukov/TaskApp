@@ -1,14 +1,15 @@
-<form>
+<form [formGroup]="taskCreationForm">
+    
     <mat-form-field class="full-width" appearance="outline">
         <mat-label>Title</mat-label>
-        <input matInput type="text" name="title" id="title">
+        <input matInput type="text" name="title" id="title" formControlName="title">
     </mat-form-field>
 
     <br>
 
     <mat-form-field class="full-width" appearance="outline">
         <mat-label>Type</mat-label>
-        <mat-select name="type" id="type">
+        <mat-select name="type" id="type" formControlName="type">
             <mat-option *ngFor="let type of taskTypes" 
                 [value]="type.userTaskTypeId">
                 {{ type.title }}
@@ -23,12 +24,16 @@
         <textarea matInput 
             name="description" 
             id="description"
-            rows="6"></textarea>
+            [rows]="descAreaRowsNumber"
+            formControlName="description">
+        </textarea>
     </mat-form-field>
 
     <br>
 
     <button mat-flat-button
         color="primary"
-        class="full-width">Send</button>
+        class="full-width">
+        Send
+    </button>
 </form>
