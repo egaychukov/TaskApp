@@ -17,7 +17,7 @@ export class UserTaskService {
       .set('title', title);
 
       return this.client.get<UserTask[]>(
-        `${environment.userTasksApiUrl}/${environment.endpoints.GetTaskByTitle}`,
+        environment.userTasksApiUrl + environment.endpoints.GetTaskByTitle,
         { params },
       );
   }

@@ -5,7 +5,13 @@
 export const environment = {
   production: false,
   userTasksApiUrl: '',
-  endpoints: { GetTasks: 'GetTasks', GetTaskByTitle: 'GetTasksByTitle', CreateTask: 'CreateTask', CheckTitle: 'CheckTitle' },
+  endpoints: { 
+    GetTasks: '/UserTasks/GetTasks', 
+    GetTaskByTitle: '/UserTasks/GetTasksByTitle', 
+    CreateTask: '/UserTasks/CreateTask', 
+    CheckTitle: '/UserTasks/CheckTitle',
+    GetTaskTypes: '/UserTaskTypes/GetTaskTypes',
+  },
   errorMessages: {
     0: 'Network or client side error',
     404: 'The item was not found',
