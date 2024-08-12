@@ -1,4 +1,6 @@
-<form [formGroup]="taskCreationForm" (ngSubmit)="createTask()">
+<form [formGroup]="taskCreationForm" 
+    (ngSubmit)="createTask()"
+    *ngIf="!creatingTask; else spinner">
     
     <mat-form-field class="full-width" appearance="outline">
         <mat-label>Title</mat-label>
@@ -48,3 +50,9 @@
         Send
     </button>
 </form>
+
+<ng-template #spinner>
+    <div class="spinner-container">
+        <mat-spinner [diameter]="spinnerDiameter"></mat-spinner>
+    </div>    
+</ng-template>

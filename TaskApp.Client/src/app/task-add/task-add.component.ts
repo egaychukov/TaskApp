@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { TaskTypeService, TaskType } from '../task-type.service';
 import { FormBuilder, FormGroup, Validator, Validators } from '@angular/forms';
-import { TaskResponse, UserTaskService } from '../user-task.service';
+import { UserTaskService } from '../user-task.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { UniqueTitleValidatorAsync } from '../validators/unique-title.validator';
-import { take } from 'rxjs';
+import { delay, take } from 'rxjs';
 import { Router } from '@angular/router';
 
 @Component({
@@ -14,12 +14,16 @@ import { Router } from '@angular/router';
 })
 export class TaskAddComponent implements OnInit {
 
-  public taskTypes: TaskType[] = [];
-  public descAreaRowsNumber: number = 6;
   private toastDuration: number = 3500;
+  private creationDelay: number = 1500;
   private failToastMessage: string = 'Task failed to create';
   private successToastMessage: string = 'Task created successfully';
   private actionToastText:string = 'Ok';
+
+  public taskTypes: TaskType[] = [];
+  public spinnerDiameter: number = 50;
+  public descAreaRowsNumber: number = 6;
+  public creatingTask: boolean = false;
   public taskCreationForm: FormGroup = this.formBuilder.group({
     title: ['', null, this.uniqueTitleValidator.validate.bind(this.uniqueTitleValidator)],
     userTaskTypeId: [''],
@@ -41,15 +45,22 @@ export class TaskAddComponent implements OnInit {
   }
 
   public createTask() {
+    this.creatingTask = true;
     this.taskService.createTask(this.taskCreationForm.value)
+      .pipe(delay(this.creationDelay))
       .subscribe({
         next: () => {
+          this.taskCreationForm.reset();
+          this.creatingTask = false;
           this.showSnackbar(true)
             .afterDismissed()
             .pipe(take(1))
             .subscribe(() => this.router.navigateByUrl('/taskList'));
         },
-        error: () => this.showSnackbar(false),
+        error: () => {
+          this.creatingTask = false;
+          this.showSnackbar(false);
+        },
       });
   }
 
