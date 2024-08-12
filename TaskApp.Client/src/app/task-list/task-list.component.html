@@ -12,7 +12,8 @@
         type="search" 
         name="userTask" 
         id="userTask"
-        [(ngModel)]="searchQuery">
+        [(ngModel)]="searchQuery"
+        (keydown.enter)="search()">
     <mat-icon matSuffix (click)="search()">search</mat-icon>
 </mat-form-field>
 
