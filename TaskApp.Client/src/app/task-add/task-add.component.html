@@ -2,38 +2,49 @@
     
     <mat-form-field class="full-width" appearance="outline">
         <mat-label>Title</mat-label>
-        <input matInput type="text" name="title" id="title" formControlName="title">
+        <input required matInput 
+            type="text" 
+            name="title" 
+            id="title" 
+            formControlName="title"
+            pattern="\S+(\s\S+)*">
+        <mat-error *ngIf="title.errors?.['titleDuplicate']">This title is already in use. Pick another one</mat-error>
+        <mat-error *ngIf="title.errors?.['required']">A title is required</mat-error>
+        <mat-error *ngIf="title.errors?.['pattern']">A title should not consist only of whitespaces or be surrounded by them</mat-error>
     </mat-form-field>
 
     <br>
 
     <mat-form-field class="full-width" appearance="outline">
         <mat-label>Type</mat-label>
-        <mat-select name="userTaskTypeId" id="userTaskTypeId" formControlName="userTaskTypeId">
+        <mat-select required name="userTaskTypeId" id="userTaskTypeId" formControlName="userTaskTypeId">
             <mat-option *ngFor="let taskType of taskTypes" 
                 [value]="taskType.userTaskTypeId">
                 {{ taskType.title }}
             </mat-option>
         </mat-select>
+        <mat-error *ngIf="taskType.errors?.['required']">A title is required</mat-error>
     </mat-form-field>
 
     <br>
 
     <mat-form-field class="full-width" appearance="outline">
         <mat-label>Description</mat-label>
-        <textarea matInput 
+        <textarea matInput required
             name="description" 
             id="description"
             [rows]="descAreaRowsNumber"
             formControlName="description">
         </textarea>
+        <mat-error *ngIf="description.errors?.['required']">A title is required</mat-error>
     </mat-form-field>
 
     <br>
 
     <button mat-flat-button
         color="primary"
-        class="full-width">
+        class="full-width"
+        [disabled]="!taskCreationForm.valid">
         Send
     </button>
 </form>

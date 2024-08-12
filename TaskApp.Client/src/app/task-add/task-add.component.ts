@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { TaskTypeService, TaskType } from '../task-type.service';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { UserTaskService } from '../user-task.service';
-import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
+import { FormBuilder, FormGroup, Validator, Validators } from '@angular/forms';
+import { TaskResponse, UserTaskService } from '../user-task.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { UniqueTitleValidatorAsync } from '../validators/unique-title.validator';
+import { take } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-task-add',
@@ -18,7 +21,7 @@ export class TaskAddComponent implements OnInit {
   private successToastMessage: string = 'Task created successfully';
   private actionToastText:string = 'Ok';
   public taskCreationForm: FormGroup = this.formBuilder.group({
-    title: [''],
+    title: ['', null, this.uniqueTitleValidator.validate.bind(this.uniqueTitleValidator)],
     userTaskTypeId: [''],
     description: [''],
   });
@@ -28,6 +31,8 @@ export class TaskAddComponent implements OnInit {
     private taskService: UserTaskService,
     private formBuilder: FormBuilder,
     private snackbar: MatSnackBar,
+    private uniqueTitleValidator: UniqueTitleValidatorAsync,
+    private router: Router,
   ) { }
 
   ngOnInit(): void {
@@ -38,7 +43,12 @@ export class TaskAddComponent implements OnInit {
   public createTask() {
     this.taskService.createTask(this.taskCreationForm.value)
       .subscribe({
-        next: () => this.showSnackbar(true),
+        next: () => {
+          this.showSnackbar(true)
+            .afterDismissed()
+            .pipe(take(1))
+            .subscribe(() => this.router.navigateByUrl('/taskList'));
+        },
         error: () => this.showSnackbar(false),
       });
   }
@@ -51,4 +61,10 @@ export class TaskAddComponent implements OnInit {
       { duration: this.toastDuration },
     );
   }
+
+  public get title() { return this.taskCreationForm.get('title')!; }
+  
+  public get taskType() { return this.taskCreationForm.get('userTaskTypeId')!; }
+
+  public get description() { return this.taskCreationForm.get('description')!; };
 }
