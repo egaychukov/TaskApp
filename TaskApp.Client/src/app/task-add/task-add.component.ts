@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { TaskTypeService, TaskType } from '../task-type.service';
-import { FormBuilder, FormGroup, Validator, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { UserTaskService } from '../user-task.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { UniqueTitleValidatorAsync } from '../validators/unique-title.validator';

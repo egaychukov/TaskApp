@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { TaskResponse, UserTaskService } from '../user-task.service';
-import { delay, interval, Observable, startWith, Subscription, catchError, EMPTY, concatMap, range, switchMap } from 'rxjs';
+import { delay, interval, Observable, startWith, Subscription, catchError, EMPTY, range, switchMap } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 
