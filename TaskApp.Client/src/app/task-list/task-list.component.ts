@@ -1,8 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { TaskResponse, UserTaskService } from '../user-task.service';
+import { TaskGetResponse, Task, UserTaskService } from '../user-task.service';
 import { delay, interval, Observable, startWith, Subscription, catchError, EMPTY, range, switchMap } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
+import { PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-task-list',
@@ -13,7 +14,7 @@ export class TaskListComponent implements OnInit, OnDestroy {
   
   private taskRefreshSub: Subscription | undefined;
 
-  public userTasks: TaskResponse[] = [];
+  public userTasks: Task[] = [];
   public isLoading: boolean = true;
   public loadFailed: boolean = false;
   public spinnerDiameter: number = 50;
@@ -21,6 +22,10 @@ export class TaskListComponent implements OnInit, OnDestroy {
   public taskRefreshFreq: number = 30000;
   public errorMessage: string = '';
   public searchQuery: string = '';
+  public pagesTotal: number = 0;
+  public currentPageIndex: number = 0;
+  public pageSize: number = 5;
+  public pageSizeOptions: number[] = [5, 10];
 
   constructor(private userTaskService: UserTaskService) { }
 
@@ -29,12 +34,12 @@ export class TaskListComponent implements OnInit, OnDestroy {
         interval(this.taskRefreshFreq)
           .pipe(startWith(this.searchTasks(range(1, 1))))
       )
-      .subscribe((tasks) => this.handleResponse(tasks));
+      .subscribe((response) => this.handleResponse(response));
   }
 
   public search() {
     this.searchTasks(range(1, 1))
-      .subscribe((tasks) => this.handleResponse(tasks));
+      .subscribe((response) => this.handleResponse(response));
   }
 
   private searchTasks(outerObservable: Observable<any>) {
@@ -42,7 +47,7 @@ export class TaskListComponent implements OnInit, OnDestroy {
       .pipe(switchMap(() => {
         this.isLoading = true;
         this.loadFailed = false;
-        return this.userTaskService.getTasksByTitle(this.searchQuery)
+        return this.userTaskService.getTasksByTitle(this.searchQuery, this.currentPageIndex, this.pageSize)
           .pipe(catchError(error => {
             this.handleError(error);
             return EMPTY;
@@ -65,9 +70,16 @@ export class TaskListComponent implements OnInit, OnDestroy {
     }
   }
 
-  private handleResponse(userTasks: TaskResponse[]) {
-    this.userTasks = userTasks;
+  private handleResponse(response: TaskGetResponse) {
+    this.userTasks = response.tasks;
     this.isLoading = false;
+    this.pagesTotal = response.count;
+  }
+
+  handlePaginatorChange(event: PageEvent) {
+    this.currentPageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.search();
   }
 
   ngOnDestroy(): void {
