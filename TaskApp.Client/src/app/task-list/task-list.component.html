@@ -13,9 +13,9 @@
         name="userTask" 
         id="userTask"
         [(ngModel)]="searchQuery"
-        (keydown.enter)="search()"
+        (keydown.enter)="initiateSearchRequest()"
         autocomplete="off">
-    <mat-icon matSuffix (click)="search()">search</mat-icon>
+    <mat-icon matSuffix (click)="initiateSearchRequest()">search</mat-icon>
 </mat-form-field>
 
 <ng-template [ngIf]="loadFailed">

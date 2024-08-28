@@ -37,7 +37,12 @@ export class TaskListComponent implements OnInit, OnDestroy {
       .subscribe((response) => this.handleResponse(response));
   }
 
-  public search() {
+  public initiateSearchRequest() {
+    this.currentPageIndex = 0;
+    this.search();
+  }
+
+  private search() {
     this.searchTasks(range(1, 1))
       .subscribe((response) => this.handleResponse(response));
   }
