@@ -33,13 +33,20 @@ public class UserTasksController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetTasksByTitle([FromQuery] string? title)
+    public async Task<IActionResult> GetTasksByTitle([FromQuery] RequestUserTaskDto taskRequest)
     {
-        var foundTasks = await tasksService.GetTasksByTitleAsync(title);
+        var foundTasks = await tasksService.GetTasksByTitleAsync(
+            taskRequest.Title,
+            taskRequest.PageIndex,
+            taskRequest.PageSize
+        );
 
         if (foundTasks is null)
             return NotFound();
 
-        return Ok(mapper.Map<List<ResponseUserTaskDto>>(foundTasks));
+        return Ok(new UserTaskGetResponse() {
+            Tasks = mapper.Map<List<UserTaskGetResponseDto>>(foundTasks),
+            Count = await tasksService.CountTasksAsync(taskRequest.Title)
+        });
     }
 }

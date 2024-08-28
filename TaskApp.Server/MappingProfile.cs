@@ -8,12 +8,10 @@ public class MappingProfile : Profile
     public MappingProfile()
     {
         CreateMap<CreateUserTaskDto, UserTask>();
-        CreateMap<UserTask, ResponseUserTaskDto>()
+        CreateMap<UserTask, UserTaskGetResponseDto>()
             .ForMember(
                 dest => dest.TaskType,
                  opt => opt.MapFrom(src => src.UserTaskType.Title)
             );
-
-
     }
 }
