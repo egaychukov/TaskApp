@@ -21,13 +21,13 @@ class UserTasksService : IUserTasksService
         return await userTasksRepository.TaskTitleExistsAsync(title);
     }
 
-    public async Task<IEnumerable<UserTask>?> GetTasksByTitleAsync(string title)
+    public async Task<IEnumerable<UserTask>?> GetTasksByTitleAsync(string title, int pageIndex, int pageSize)
     {
-        return await userTasksRepository.GetTasksByTitleAsync(title);
+        return await userTasksRepository.GetTasksByTitleAsync(title, pageIndex, pageSize);
     }
 
-    public async Task<IEnumerable<UserTask>?> GetTasks()
+    public async Task<int> CountTasksAsync(string title)
     {
-        return await userTasksRepository.GetTasksAsync();
+        return await userTasksRepository.CountTasksAsync(title);
     }
 }

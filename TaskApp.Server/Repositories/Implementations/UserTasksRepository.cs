@@ -16,28 +16,29 @@ public class UserTasksRepository : IUserTasksRepository
         return userTask;
     }
 
-    public async Task<IEnumerable<UserTask>?> GetTasksByTitleAsync(string title)
+    public async Task<IEnumerable<UserTask>?> GetTasksByTitleAsync(string title, int pageIndex, int pageSize)
+    {
+        var foundTasks = (await GetTasksAsync(title))
+            .Skip(pageIndex * pageSize)
+            .Take(pageSize);
+        
+        return foundTasks.Count() > 0 ? foundTasks.ToList() : null;
+    }
+
+    public async Task<int> CountTasksAsync(string title)
+    {
+        var foundTasks = await GetTasksAsync(title);
+        return foundTasks.Count();
+    }
+
+    private async Task<IEnumerable<UserTask>?> GetTasksAsync(string title)
     {
         if (string.IsNullOrEmpty(title))
             title = string.Empty;
 
-        var foundTasks = userTasksContext.UserTasks
+        return userTasksContext.UserTasks
             .Where(task => task.Title.Contains(title))
             .Include(task => task.UserTaskType);
-
-        return foundTasks.Count() > 0
-            ? await foundTasks.ToListAsync()
-            : null;
-    }
-
-    public async Task<IEnumerable<UserTask>?> GetTasksAsync()
-    {
-        var foundTasks = userTasksContext.UserTasks
-            .Include(task => task.UserTaskType);
-        
-        return foundTasks.Count() > 0
-            ? await foundTasks.ToListAsync()
-            : null;
     }
 
     public async Task<bool> TaskTitleExistsAsync(string title)
