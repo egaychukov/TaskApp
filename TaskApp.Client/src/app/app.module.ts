@@ -25,6 +25,9 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
+import { TaskAddEffects } from './store/effects/task-add.effects';
+import { taskAddReducer } from './store/reducers/task-add-reducer';
+import { NgrxFormsModule } from 'ngrx-forms';
 
 @NgModule({
   declarations: [
@@ -54,8 +57,9 @@ import { EffectsModule } from '@ngrx/effects';
     ReactiveFormsModule,
     MatSnackBarModule,
     MatPaginatorModule,
-    StoreModule.forRoot({}, {}),
-    EffectsModule.forRoot([]),
+    StoreModule.forRoot({taskAdd: taskAddReducer}),
+    EffectsModule.forRoot([TaskAddEffects]),
+    NgrxFormsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
