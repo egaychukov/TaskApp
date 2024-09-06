@@ -23,6 +23,7 @@
     "@angular/router": "~13.3.0",
     "@ngrx/effects": "^13.2.0",
     "@ngrx/store": "^13.2.0",
+    "immer": "^10.1.1",
     "ngrx-forms": "^8.0.0",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
