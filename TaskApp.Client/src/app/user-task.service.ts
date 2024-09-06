@@ -24,15 +24,20 @@ export class UserTaskService {
       );
   }
 
-  public createTask(userTask: TaskRequest): Observable<TaskRequest> {
-    console.log(userTask);
-    return this.client.post<TaskRequest>(
+  public createTask(userTask: TaskCreateRequest): Observable<TaskCreateResponse> {
+    return this.client.post<TaskCreateResponse>(
       environment.userTasksApiUrl + environment.endpoints.CreateTask, 
       userTask);
   }
 }
 
-export interface TaskRequest {
+export interface TaskCreateRequest {
+  title: string,
+  description: string,
+  userTaskTypeId: number,
+}
+
+export interface TaskCreateResponse {
   title: string,
   description: string,
   userTaskTypeId: number,

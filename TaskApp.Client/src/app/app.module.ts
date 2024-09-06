@@ -57,7 +57,7 @@ import { NgrxFormsModule } from 'ngrx-forms';
     ReactiveFormsModule,
     MatSnackBarModule,
     MatPaginatorModule,
-    StoreModule.forRoot({taskAdd: taskAddReducer}),
+    StoreModule.forRoot({ taskAddState: taskAddReducer }),
     EffectsModule.forRoot([TaskAddEffects]),
     NgrxFormsModule,
   ],
