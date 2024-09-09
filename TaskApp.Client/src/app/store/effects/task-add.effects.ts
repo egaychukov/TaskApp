@@ -18,10 +18,12 @@ export class TaskAddEffects {
 
     createTask = createEffect(() => this.actions$.pipe(
         ofType(TaskAddActions.createTask),
-        exhaustMap(createTaskAction => this.userTaskService.createTask(createTaskAction.formData)),
-        delay(environment.responseDelay),
-        map(() => TaskAddActions.createTaskSuccess()),
-        catchError(() => of(TaskAddActions.createTaskFailure())),
+        exhaustMap(createTaskAction => this.userTaskService.createTask(createTaskAction.formData)
+            .pipe(
+                map(() => TaskAddActions.createTaskSuccess()),
+                catchError(() => of(TaskAddActions.createTaskFailure())),
+            )),
+        delay(environment.responseDelay)
     ));
 
     handleSuccess = createEffect(() => this.actions$.pipe(
