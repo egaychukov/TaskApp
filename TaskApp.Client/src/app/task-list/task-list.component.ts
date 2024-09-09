@@ -2,10 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { Task } from '../user-task.service';
 import { Observable } from 'rxjs';
 import { PageEvent } from '@angular/material/paginator';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import { AppState } from '../store/app.state';
 import * as taskListActions from '../store/actions/task-list.actions';
 import { UIConfig } from '../ui-config';
+import { selectErrorMessage, selectLoadFailureStatus, selectLoadingStatus, selectPageTotalNumber, selectUserTasks } from '../store/selectors/task-list.selectors';
 
 @Component({
   selector: 'app-task-list',
@@ -26,11 +27,11 @@ export class TaskListComponent implements OnInit {
   public pageSizeOptions: number[] = [5, 10];
 
   constructor(private store: Store<AppState>) { 
-    this.userTasks$ = this.store.select(state => state.taskListState.userTasks);
-    this.isLoading$ = this.store.select(state => state.taskListState.isLoading);
-    this.loadFailed$ = this.store.select(state => state.taskListState.loadFailed);
-    this.pagesTotal$ = this.store.select(state => state.taskListState.pageTotal);
-    this.errorMessage$ = this.store.select(state => state.taskListState.errorMessage);
+    this.userTasks$ = store.pipe(select(selectUserTasks));
+    this.isLoading$ = store.pipe(select(selectLoadingStatus));
+    this.loadFailed$ = store.pipe(select(selectLoadFailureStatus));
+    this.pagesTotal$ = store.pipe(select(selectPageTotalNumber));
+    this.errorMessage$ = store.pipe(select(selectErrorMessage));
   }
 
   ngOnInit(): void {
