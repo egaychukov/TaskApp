@@ -1,6 +1,6 @@
 <form [formGroup]="taskCreationForm" 
     (ngSubmit)="createTask()"
-    *ngIf="!creatingTask; else spinner">
+    *ngIf="!(creatingTask$ | async); else spinner">
     
     <mat-form-field class="full-width" appearance="outline">
         <mat-label>Title</mat-label>
@@ -20,7 +20,7 @@
     <mat-form-field class="full-width" appearance="outline">
         <mat-label>Type</mat-label>
         <mat-select required name="userTaskTypeId" id="userTaskTypeId" formControlName="userTaskTypeId">
-            <mat-option *ngFor="let taskType of taskTypes" 
+            <mat-option *ngFor="let taskType of (taskTypes$ | async)" 
                 [value]="taskType.userTaskTypeId">
                 {{ taskType.title }}
             </mat-option>

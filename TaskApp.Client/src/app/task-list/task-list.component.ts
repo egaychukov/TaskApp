@@ -1,93 +1,61 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { TaskGetResponse, Task, UserTaskService } from '../user-task.service';
-import { delay, interval, Observable, startWith, Subscription, catchError, EMPTY, range, switchMap } from 'rxjs';
-import { HttpErrorResponse } from '@angular/common/http';
-import { environment } from 'src/environments/environment';
+import { Component, OnInit } from '@angular/core';
+import { Task } from '../user-task.service';
+import { Observable } from 'rxjs';
 import { PageEvent } from '@angular/material/paginator';
+import { select, Store } from '@ngrx/store';
+import { AppState } from '../store/app.state';
+import * as taskListActions from '../store/actions/task-list.actions';
+import { UIConfig } from '../ui-config';
+import { selectErrorMessage, selectLoadFailureStatus, selectLoadingStatus, selectPageTotalNumber, selectUserTasks } from '../store/selectors/task-list.selectors';
 
 @Component({
   selector: 'app-task-list',
   templateUrl: './task-list.component.html',
   styleUrls: ['./task-list.component.css']
 })
-export class TaskListComponent implements OnInit, OnDestroy {
-  
-  private taskRefreshSub: Subscription | undefined;
-
-  public userTasks: Task[] = [];
-  public isLoading: boolean = true;
-  public loadFailed: boolean = false;
-  public spinnerDiameter: number = 50;
-  public responseDelay: number = 500;
+export class TaskListComponent implements OnInit {
+  public userTasks$: Observable<Task[]>;
+  public isLoading$: Observable<boolean>;
+  public loadFailed$: Observable<boolean>;
+  public pagesTotal$: Observable<number>;
+  public errorMessage$: Observable<string>;
+  public spinnerDiameter: number = UIConfig.spinnerDiameter;
   public taskRefreshFreq: number = 30000;
-  public errorMessage: string = '';
   public searchQuery: string = '';
-  public pagesTotal: number = 0;
   public currentPageIndex: number = 0;
   public pageSize: number = 5;
   public pageSizeOptions: number[] = [5, 10];
 
-  constructor(private userTaskService: UserTaskService) { }
+  constructor(private store: Store<AppState>) { 
+    this.userTasks$ = store.pipe(select(selectUserTasks));
+    this.isLoading$ = store.pipe(select(selectLoadingStatus));
+    this.loadFailed$ = store.pipe(select(selectLoadFailureStatus));
+    this.pagesTotal$ = store.pipe(select(selectPageTotalNumber));
+    this.errorMessage$ = store.pipe(select(selectErrorMessage));
+  }
 
   ngOnInit(): void {
-    this.taskRefreshSub = this.searchTasks(
-        interval(this.taskRefreshFreq)
-          .pipe(startWith(this.searchTasks(range(1, 1))))
-      )
-      .subscribe((response) => this.handleResponse(response));
+    this.dispatchSearchAction();
+    setInterval(() => this.dispatchSearchAction(), this.taskRefreshFreq);
   }
 
-  public initiateSearchRequest() {
+  private dispatchSearchAction() {
+    const searchAction = taskListActions.searchTasks({
+      searchQuery: this.searchQuery,
+      currentPageIndex: this.currentPageIndex,
+      pageSize: this.pageSize,
+    });
+    return this.store.dispatch(searchAction);
+  }
+
+  public search() {
     this.currentPageIndex = 0;
-    this.search();
-  }
-
-  private search() {
-    this.searchTasks(range(1, 1))
-      .subscribe((response) => this.handleResponse(response));
-  }
-
-  private searchTasks(outerObservable: Observable<any>) {
-    return outerObservable
-      .pipe(switchMap(() => {
-        this.isLoading = true;
-        this.loadFailed = false;
-        return this.userTaskService.getTasksByTitle(this.searchQuery, this.currentPageIndex, this.pageSize)
-          .pipe(catchError(error => {
-            this.handleError(error);
-            return EMPTY;
-          }))
-      }))
-      .pipe(delay(this.responseDelay));
-  }
-
-  private handleError(error: Error) {
-    this.userTasks = [];
-    this.isLoading = false;
-    this.loadFailed = true;
-
-    if (error instanceof HttpErrorResponse) {
-      const message = environment.errorMessages[error.status];
-      this.errorMessage = message ?? environment.defaultErrorMessage;
-    }
-    else {
-      throw error;
-    }
-  }
-
-  private handleResponse(response: TaskGetResponse) {
-    this.userTasks = response.tasks;
-    this.isLoading = false;
-    this.pagesTotal = response.count;
+    this.dispatchSearchAction();
   }
 
   handlePaginatorChange(event: PageEvent) {
     this.currentPageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
-    this.search();
-  }
-
-  ngOnDestroy(): void {
-    this.taskRefreshSub?.unsubscribe();
+    this.dispatchSearchAction();
   }
 }

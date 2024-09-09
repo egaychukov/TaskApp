@@ -23,6 +23,13 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
+import { TaskAddEffects } from './store/effects/task-add.effects';
+import { taskAddReducer } from './store/reducers/task-add-reducer';
+import { NgrxFormsModule } from 'ngrx-forms';
+import { reducers } from './store/app.state';
+import { TaskListEffects } from './store/effects/task-list.effects';
 
 @NgModule({
   declarations: [
@@ -52,6 +59,9 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     ReactiveFormsModule,
     MatSnackBarModule,
     MatPaginatorModule,
+    StoreModule.forRoot(reducers),
+    EffectsModule.forRoot([TaskAddEffects, TaskListEffects]),
+    NgrxFormsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

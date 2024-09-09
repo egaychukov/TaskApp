@@ -17,7 +17,8 @@ export const environment = {
     404: 'The item was not found',
     500: 'Internal server error. Please try again later',
   } as { [key: number]: string },
-  defaultErrorMessage: 'An unexpected error occurred'
+  defaultErrorMessage: 'An unexpected error occurred',
+  responseDelay: 1500,
 };
 
 /*

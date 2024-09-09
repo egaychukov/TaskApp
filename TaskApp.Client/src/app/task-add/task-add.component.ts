@@ -1,76 +1,62 @@
-import { Component, OnInit } from '@angular/core';
-import { TaskTypeService, TaskType } from '../task-type.service';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { TaskType } from '../task-type.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { UserTaskService } from '../user-task.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { UniqueTitleValidatorAsync } from '../validators/unique-title.validator';
-import { delay, take } from 'rxjs';
-import { Router } from '@angular/router';
+import { Observable, Subscription, take } from 'rxjs';
+import { select, Store } from '@ngrx/store';
+import * as taskAddActions from '../store/actions/task-add.actions';
+import { AppState } from '../store/app.state';
+import { UIConfig } from '../ui-config';
+import { selectTaskCreatingStatus, selectTaskTypes } from '../store/selectors/task-add.selectors';
 
 @Component({
   selector: 'app-task-add',
   templateUrl: './task-add.component.html',
   styleUrls: ['./task-add.component.css']
 })
-export class TaskAddComponent implements OnInit {
+export class TaskAddComponent implements OnInit, OnDestroy {
 
-  private toastDuration: number = 3500;
-  private creationDelay: number = 1500;
-  private failToastMessage: string = 'Task failed to create';
-  private successToastMessage: string = 'Task created successfully';
-  private actionToastText:string = 'Ok';
+  private subs: Subscription = new Subscription();
 
-  public taskTypes: TaskType[] = [];
-  public spinnerDiameter: number = 50;
   public descAreaRowsNumber: number = 6;
-  public creatingTask: boolean = false;
+  public spinnerDiameter: number = UIConfig.spinnerDiameter;
+  public creatingTask$: Observable<boolean>;
+  public taskTypes$: Observable<TaskType[]>;
+
   public taskCreationForm: FormGroup = this.formBuilder.group({
     title: ['', null, this.uniqueTitleValidator.validate.bind(this.uniqueTitleValidator)],
     userTaskTypeId: [''],
     description: [''],
   });
 
-  constructor(
-    private taskTypeService: TaskTypeService,
-    private taskService: UserTaskService,
+  constructor (
+    private store: Store<AppState>,
     private formBuilder: FormBuilder,
-    private snackbar: MatSnackBar,
     private uniqueTitleValidator: UniqueTitleValidatorAsync,
-    private router: Router,
-  ) { }
+  ) { 
+    this.creatingTask$ = store.pipe(select(selectTaskCreatingStatus));
+    this.taskTypes$ = store.pipe(select(selectTaskTypes));
+  }
 
   ngOnInit(): void {
-    this.taskTypeService.getTaskTypes()
-      .subscribe(types => this.taskTypes = types);
+    this.store.dispatch(taskAddActions.loadTaskTypes());
+
+    this.subs = this.taskCreationForm.valueChanges
+      .subscribe(formData => this.store.dispatch(
+        taskAddActions.changeFormModel({ formData })
+      ));
+  }
+
+  ngOnDestroy(): void {
+    this.subs.unsubscribe();
   }
 
   public createTask() {
-    this.creatingTask = true;
-    this.taskService.createTask(this.taskCreationForm.value)
-      .pipe(delay(this.creationDelay))
-      .subscribe({
-        next: () => {
-          this.taskCreationForm.reset();
-          this.creatingTask = false;
-          this.showSnackbar(true)
-            .afterDismissed()
-            .pipe(take(1))
-            .subscribe(() => this.router.navigateByUrl('/taskList'));
-        },
-        error: () => {
-          this.creatingTask = false;
-          this.showSnackbar(false);
-        },
+    this.store.select(store => store.taskAddState.formData)
+      .pipe(take(1))
+      .subscribe(formData => {
+        this.store.dispatch(taskAddActions.createTask({ formData }));
       });
-  }
-
-  private showSnackbar(success: boolean) {
-    const message = success ? this.successToastMessage : this.failToastMessage;
-    return this.snackbar.open(
-      message, 
-      this.actionToastText, 
-      { duration: this.toastDuration },
-    );
   }
 
   public get title() { return this.taskCreationForm.get('title')!; }
