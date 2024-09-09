@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { UserTaskService } from "src/app/user-task.service";
 import * as taskListActions from "../actions/task-list.actions";
-import { catchError, delay, map, of, switchMap, tap } from "rxjs";
+import { catchError, delay, map, of, switchMap } from "rxjs";
 import { environment } from "src/environments/environment";
 
 @Injectable()

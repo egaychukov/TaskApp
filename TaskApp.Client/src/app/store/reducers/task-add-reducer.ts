@@ -11,7 +11,7 @@ export const initTaskAddState: TaskAddState = {
         description: '',
         userTaskTypeId: 0,
     },
-}
+};
 
 export const taskAddReducer = createReducer(
     initTaskAddState,

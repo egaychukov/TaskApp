@@ -5,6 +5,7 @@ import { PageEvent } from '@angular/material/paginator';
 import { Store } from '@ngrx/store';
 import { AppState } from '../store/app.state';
 import * as taskListActions from '../store/actions/task-list.actions';
+import { UIConfig } from '../ui-config';
 
 @Component({
   selector: 'app-task-list',
@@ -17,7 +18,7 @@ export class TaskListComponent implements OnInit {
   public loadFailed$: Observable<boolean>;
   public pagesTotal$: Observable<number>;
   public errorMessage$: Observable<string>;
-  public spinnerDiameter: number = 50;
+  public spinnerDiameter: number = UIConfig.spinnerDiameter;
   public taskRefreshFreq: number = 30000;
   public searchQuery: string = '';
   public currentPageIndex: number = 0;

@@ -1,22 +1,24 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { TaskType } from '../task-type.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { UniqueTitleValidatorAsync } from '../validators/unique-title.validator';
-import { Observable, take } from 'rxjs';
+import { Observable, Subscription, take } from 'rxjs';
 import { Store } from '@ngrx/store';
-import * as TaskAddActions from '../store/actions/task-add.actions';
+import * as taskAddActions from '../store/actions/task-add.actions';
 import { TaskAddState } from '../store/app.state';
+import { UIConfig } from '../ui-config';
 
 @Component({
   selector: 'app-task-add',
   templateUrl: './task-add.component.html',
   styleUrls: ['./task-add.component.css']
 })
-export class TaskAddComponent implements OnInit {
+export class TaskAddComponent implements OnInit, OnDestroy {
 
-  public spinnerDiameter: number = 50;
+  private subs: Subscription = new Subscription();
+
   public descAreaRowsNumber: number = 6;
-
+  public spinnerDiameter: number = UIConfig.spinnerDiameter;
   public creatingTask$: Observable<boolean>;
   public taskTypes$: Observable<TaskType[]>;
 
@@ -36,19 +38,23 @@ export class TaskAddComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.store.dispatch(TaskAddActions.loadTaskTypes());
+    this.store.dispatch(taskAddActions.loadTaskTypes());
 
-    this.taskCreationForm.valueChanges
+    this.subs = this.taskCreationForm.valueChanges
       .subscribe(formData => this.store.dispatch(
-        TaskAddActions.changeFormModel({ formData })
+        taskAddActions.changeFormModel({ formData })
       ));
+  }
+
+  ngOnDestroy(): void {
+    this.subs.unsubscribe();
   }
 
   public createTask() {
     this.store.select(store => store.taskAddState.formData)
       .pipe(take(1))
       .subscribe(formData => {
-        this.store.dispatch(TaskAddActions.createTask({ formData }));
+        this.store.dispatch(taskAddActions.createTask({ formData }));
       });
   }
 

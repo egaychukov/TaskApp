@@ -29,11 +29,9 @@ export class TaskAddEffects {
     handleSuccess = createEffect(() => this.actions$.pipe(
         ofType(TaskAddActions.createTaskSuccess),
         concatMap(() => [
-            TaskAddActions.showSnackbar({ 
-                message: 'Created successfully', 
-                duration: 3000, 
-                actionText: 'OK',
-            }),
+            TaskAddActions.showSnackbar(
+                this.getSnackBarSettings('Created successfully')
+            ),
             TaskAddActions.navigateToListPage(),
         ]),
     ));
@@ -41,11 +39,9 @@ export class TaskAddEffects {
     handleCreationError = createEffect(() => this.actions$.pipe(
         ofType(TaskAddActions.createTaskFailure),
         concatMap(() => [
-            TaskAddActions.showSnackbar({ 
-                message: 'Failed to create a task', 
-                duration: 3000, 
-                actionText: 'OK',
-            }),
+            TaskAddActions.showSnackbar(
+                this.getSnackBarSettings('Failed to create a task')
+            ),
         ]),
     ));
 
@@ -70,4 +66,12 @@ export class TaskAddEffects {
         private router: Router,
         private snackbar: MatSnackBar,
     ) {}
+
+    private getSnackBarSettings(message: string) {
+        return { 
+            message: message, 
+            duration: 3000, 
+            actionText: 'OK',
+        }
+    }
 }

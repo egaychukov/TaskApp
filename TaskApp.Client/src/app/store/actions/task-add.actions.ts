@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { TaskCreateRequest, Task } from 'src/app/user-task.service';
+import { TaskCreateRequest } from 'src/app/user-task.service';
 import { TaskType } from 'src/app/task-type.service';
 
 export const loadTaskTypes = createAction(
@@ -37,4 +37,3 @@ export const showSnackbar = createAction(
 export const navigateToListPage = createAction(
   '[Creation Page] Navigate To List Page',
 );
-
