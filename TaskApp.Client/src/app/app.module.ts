@@ -28,6 +28,8 @@ import { EffectsModule } from '@ngrx/effects';
 import { TaskAddEffects } from './store/effects/task-add.effects';
 import { taskAddReducer } from './store/reducers/task-add-reducer';
 import { NgrxFormsModule } from 'ngrx-forms';
+import { reducers } from './store/app.state';
+import { TaskListEffects } from './store/effects/task-list.effects';
 
 @NgModule({
   declarations: [
@@ -57,8 +59,8 @@ import { NgrxFormsModule } from 'ngrx-forms';
     ReactiveFormsModule,
     MatSnackBarModule,
     MatPaginatorModule,
-    StoreModule.forRoot({ taskAddState: taskAddReducer }),
-    EffectsModule.forRoot([TaskAddEffects]),
+    StoreModule.forRoot(reducers),
+    EffectsModule.forRoot([TaskAddEffects, TaskListEffects]),
     NgrxFormsModule,
   ],
   providers: [],

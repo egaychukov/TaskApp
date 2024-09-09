@@ -1,7 +1,17 @@
 import { createReducer, on } from "@ngrx/store";
-import { initTaskAddState } from "../app.state";
 import * as TaskAddActions from "../actions/task-add.actions";
 import { produce } from "immer";
+import { TaskAddState } from "../app.state";
+
+export const initTaskAddState: TaskAddState = {
+    taskTypes: [],
+    taskCreating: false,
+    formData: {
+        title: '',
+        description: '',
+        userTaskTypeId: 0,
+    },
+}
 
 export const taskAddReducer = createReducer(
     initTaskAddState,
@@ -19,7 +29,7 @@ export const taskAddReducer = createReducer(
         ...state,
         taskCreating: true,    
     })),
-    on(TaskAddActions.createTaskSuccess, state => ({
+    on(TaskAddActions.createTaskSuccess, () => ({
         ...initTaskAddState
     })),
     on(TaskAddActions.createTaskFailure, state => ({

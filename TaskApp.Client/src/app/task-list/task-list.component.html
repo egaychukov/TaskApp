@@ -13,19 +13,19 @@
         name="userTask" 
         id="userTask"
         [(ngModel)]="searchQuery"
-        (keydown.enter)="initiateSearchRequest()"
+        (keydown.enter)="search()"
         autocomplete="off">
-    <mat-icon matSuffix (click)="initiateSearchRequest()">search</mat-icon>
+    <mat-icon matSuffix (click)="search()">search</mat-icon>
 </mat-form-field>
 
-<ng-template [ngIf]="loadFailed">
-    <mat-card> {{errorMessage}} </mat-card>
+<ng-template [ngIf]="(loadFailed$ | async)">
+    <mat-card> {{ errorMessage$ | async}} </mat-card>
 </ng-template>
 
-<ng-container *ngIf="!isLoading; else spinner">
-    <ng-template [ngIf]="!loadFailed">
+<ng-container *ngIf="!(isLoading$ | async); else spinner">
+    <ng-template [ngIf]="!(loadFailed$ | async)">
         <mat-accordion>
-            <mat-expansion-panel *ngFor="let userTask of userTasks">
+            <mat-expansion-panel *ngFor="let userTask of (userTasks$ | async)">
                 <mat-expansion-panel-header>
                     <mat-panel-title>{{ userTask.title }}</mat-panel-title>
                     <mat-panel-description> {{ userTask.taskType }} </mat-panel-description>
@@ -36,7 +36,7 @@
         </mat-accordion>
         
         <mat-paginator 
-            [length]="pagesTotal"
+            [length]="pagesTotal$ | async"
             [pageSize]="pageSize"
             [pageIndex]="currentPageIndex"
             [pageSizeOptions]="pageSizeOptions"
